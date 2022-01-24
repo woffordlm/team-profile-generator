@@ -1,5 +1,9 @@
-const { prompt } = require("inquirer");
+const Employee = require("./lib/Employee");
+const Manager = require ("./lib/Manager")
+const Engineer = require ("./lib/Engineer")
+const Intern = require('./lib/Intern')
 const inquirer = require("inquirer")
+const generateHTML = require("./src/html-template")
 teamMemberCounter = 0
 
 
@@ -61,14 +65,16 @@ const promptUser = () => {
             choices: ['engineer', 'intern', 'finished building team']
           }
     ])
-    .then(mangagerData => {
-      console.log('mangagerData:', mangagerData)
-      teamList.push(mangagerData);
+    .then(managerData => {
+      const {managerName, id, email, officeNumber, nextEmployee} = managerData
+      const manager = new Manager(managerName, id, email, officeNumber) 
+      teamList.push(manager);
       console.log('teamList:', teamList)
-      if (teamList[0].nextEmployee[0] === "engineer") {
+      console.log(nextEmployee)
+      if (nextEmployee[0] === "engineer") {
         engineerQuestionsPrompt(teamList)
         teamMemberCounter++
-      } else if (teamList[0].nextEmployee[0] === "intern") {
+      } else if (nextEmployee[0] === "intern") {
         internQuestionsPrompt(teamList)
         teamMemberCounter++
       } else {
@@ -93,13 +99,13 @@ const engineerQuestionsPrompt = (teamList) =>{
     },
     {
       type: 'input',
-      name: 'engineersId',
+      name: 'engineerId',
       message: 'What is the engineers employee ID? (Required)',
       default: teamList.length
     },
     {
       type: 'input',
-      name: 'engineersEmail',
+      name: 'engineerEmail',
       message: 'What is the engineers email? (Required)',
       validate: emailInput => {
         if (emailInput) {
@@ -112,7 +118,7 @@ const engineerQuestionsPrompt = (teamList) =>{
     },
     {
       type: 'input',
-      name: 'engineersGithub',
+      name: 'engineerGithub',
       message: 'What is the engineers github username? (Required)',
       validate: githubInput => {
         if (githubInput) {
@@ -131,14 +137,15 @@ const engineerQuestionsPrompt = (teamList) =>{
     }
   ])
   .then(engineerData => {
-    console.log('engineerData:', engineerData)
-    teamList.push(engineerData)
+    const {nextEmployee, engineerGithub, engineerEmail, engineerId, engineerName } = engineerData
+    const engineer = new Engineer ( engineerName, engineerId, engineerEmail, engineerGithub)
+    teamList.push(engineer)
     console.log('teamList:', teamList)
-    if (teamList[teamMemberCounter].nextEmployee[0] === "engineer") {
+    if (nextEmployee[0] === "engineer") {
       engineerQuestionsPrompt(teamList)
       teamMemberCounter++
 
-    } else if (teamList[teamMemberCounter].nextEmployee[0] === "intern") {
+    } else if (nextEmployee[0] === "intern") {
       internQuestionsPrompt(teamList)
       teamMemberCounter++
     } else {
@@ -163,13 +170,13 @@ const internQuestionsPrompt = (teamList) => {
     },
     {
       type: 'input',
-      name: 'internsId',
+      name: 'internId',
       message: 'What is the interns employee ID? (Required)',
       default: teamList.length
     },
     {
       type: 'input',
-      name: 'internEmailInput',
+      name: 'internEmail',
       message: 'What is the interns email? (Required)',
       validate: internEmailInput => {
         if (internEmailInput) {
@@ -201,12 +208,15 @@ const internQuestionsPrompt = (teamList) => {
     }
   ])
   .then(internData => {
-    teamList.push(internData);
+    const {internName, internId, internEmail, internSchool, nextEmployee}= internData
+    console.log('internData:', internData)
+    const intern = new Intern (internName, internId, internEmail, internSchool )
+    teamList.push(intern);
     console.log('teamList:', teamList)
-    if (teamList[teamMemberCounter].nextEmployee[0] === "engineer") {
+    if ( nextEmployee[0]=== "engineer") {
       engineerQuestionsPrompt(teamList)
       teamMemberCounter++
-    } else if (teamList[teamMemberCounter].nextEmployee[0] === "intern") {
+    } else if (nextEmployee[0] === "intern") {
       internQuestionsPrompt(teamList)
       teamMemberCounter++
     } else {
@@ -216,7 +226,14 @@ const internQuestionsPrompt = (teamList) => {
 })
 }
 
-promptUser(); 
+promptUser()
+  
+//   .then((teamListData) => {
+    
+//     return generateHTML(teamListData);
+//   })
+// }
+
 
 
 
