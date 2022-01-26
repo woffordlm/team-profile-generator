@@ -4,6 +4,7 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const generateHTML = require("./src/html-template");
+const writeFile = require("./utils/generateHtmlPage")
 teamMemberCounter = 0;
 var teamList = [];
 
@@ -63,7 +64,6 @@ const promptUser = () => {
         managerData;
       const manager = new Manager(managerName, id, email, officeNumber);
       teamList.push(manager);
-      
     });
 };
 const employeeQuestions = () => {
@@ -73,7 +73,7 @@ const employeeQuestions = () => {
         type: "list",
         name: "role",
         message: "What type of employee would you like to add to the team? ",
-        choices: ["Engineer", "Intern",],
+        choices: ["Engineer", "Intern"],
       },
       {
         type: "input",
@@ -135,30 +135,38 @@ const employeeQuestions = () => {
         },
       },
       {
-        type: 'confirm',
-        name: 'confirmAddEmployee',
-        message: 'Would you like to add more team members?',
-        default: true
-    }
+        type: "confirm",
+        name: "confirmAddEmployee",
+        message: "Would you like to add more team members?",
+        default: true,
+      },
     ])
     .then((empData) => {
-      const { school, employeeGithub, email, id, name, role, confirmAddEmployee } = empData;
+      const {
+        school,
+        employeeGithub,
+        email,
+        id,
+        name,
+        role,
+        confirmAddEmployee,
+      } = empData;
       if (role === "Engineer") {
         const employee = new Engineer(name, id, email, employeeGithub);
-        teamList.push(employee)
+        teamList.push(employee);
         teamMemberCounter++;
       } else if (role === "Intern") {
         const employee = new Intern(name, id, email, school);
-        teamList.push(employee)
+        teamList.push(employee);
         teamMemberCounter++;
       } else {
-        return teamList
+        return teamList;
       }
-      
+
       if (confirmAddEmployee === true) {
         return employeeQuestions(teamList);
       } else {
-        return teamList
+        return teamList;
       }
     });
 };
@@ -166,95 +174,9 @@ const employeeQuestions = () => {
 promptUser()
   .then(employeeQuestions)
   .then((employeeData) => {
-  generateHTML(employeeData)
- 
-});
-
-//  .then((data) => {
-//   console.log('data:', data)
-//    return generateHTML(data)
-//  })
-//  .catch((err) => {
-//   console.log(err);
-// });
-
-// const internQuestionsPrompt = () => {
-//   return inquirer
-//     .prompt([
-//       {
-//         type: "input",
-//         name: "internName",
-//         message: "What is the interns name?",
-//         validate: (internNameInput) => {
-//           if (internNameInput) {
-//             return true;
-//           } else {
-//             console.log("Please enter a name!");
-//             return false;
-//           }
-//         },
-//       },
-//       {
-//         type: "input",
-//         name: "internId",
-//         message: "What is the interns employee ID? (Required)",
-//         default: teamList.length,
-//       },
-//       {
-//         type: "input",
-//         name: "internEmail",
-//         message: "What is the interns email? (Required)",
-//         validate: (internEmailInput) => {
-//           if (internEmailInput) {
-//             return true;
-//           } else {
-//             console.log("Please enter the email!");
-//             return false;
-//           }
-//         },
-//       },
-//       {
-//         type: "input",
-//         name: "internSchool",
-//         message: "What is the interns school? (Required)",
-//         validate: (schoolInput) => {
-//           if (schoolInput) {
-//             return true;
-//           } else {
-//             console.log("Please enter the school!");
-//             return false;
-//           }
-//         },
-//       },
-//       {
-//         type: "checkbox",
-//         name: "nextEmployee",
-//         message:
-//           "Would you like to add an engineer or intern or are you finished building your team?",
-//         choices: ["engineer", "intern", "finished building team"],
-//       },
-//     ])
-//     .then((internData) => {
-//       const { internName, internId, internEmail, internSchool, nextEmployee } =
-//         internData;
-//       // console.log("internData:", internData);
-//       const intern = new Intern(
-//         internName,
-//         internId,
-//         internEmail,
-//         internSchool
-//       );
-//       teamList.push(intern);
-//       // console.log("teamList:", teamList);
-//       if (nextEmployee[0] === "engineer") {
-//         teamMemberCounter++;
-//         return engineerQuestionsPrompt(teamList);
-//       } else if (nextEmployee[0] === "intern") {
-//         teamMemberCounter++;
-//         return internQuestionsPrompt(teamList);
-//       } else {
-//         console.log("teamList:", teamList);
-//         return teamList;
-//       }
-//     });
-// };
+    return generateHTML(employeeData);
+  })
+  .then(htmlData => {
+    return writeFile(htmlData);
+  }
+  )
