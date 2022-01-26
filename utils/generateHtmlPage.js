@@ -1,21 +1,20 @@
+// utilizing file system in order to write file
 const fs = require('fs')
+// writing file with content and placing it in the dist folder
 function writeFile(fileContent) {
     console.log('fileContent:', fileContent)
-    return new Promise ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         fs.writeFile("./dist/index.html", fileContent, err => {
-            // if there's an error, reject the Promise and send the error to the Promise's `.catch()` method
             if (err) {
-              reject(err);
-              // return out of the function here to make sure the Promise doesn't accidentally execute the resolve() function as well
-              return;
+                reject(err);
+                return;
             }
-      
-            // if everything went well, resolve the Promise and send the successful data to the `.then()` method
             resolve({
-              ok: true,
-              message: 'File created!'
+                ok: true,
+                message: 'File created!'
             });
-          }); 
+        });
     })
 }
+// exporting to index
 module.exports = writeFile

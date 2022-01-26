@@ -10,5 +10,12 @@ describe('creates a new manager', () => {
             expect(manager.id).toBe('3')
             expect(manager.email).toBe('lukewofford@gmail.com')
         })
-})
+    })
+    describe("pass parameteres to a new manager", () => {
+        it ('all of the parameters should match', () => {
+            const manager = new Manager ( 'luke', '3', 'lukewofford@gmail.com', '3364072276').getRole()
+            expect(manager).toBe('Manager')
+           
+        })
+    })
 })

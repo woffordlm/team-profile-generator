@@ -1,17 +1,18 @@
-const Employee = require("./lib/Employee");
+
+// importing lib materials
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
+// initiating inquirer package
 const inquirer = require("inquirer");
 const generateHTML = require("./src/html-template");
 const writeFile = require("./utils/generateHtmlPage")
 teamMemberCounter = 0;
 var teamList = [];
-
+// prompting user for question data
 const promptUser = () => {
   return inquirer
-    .prompt([
-      {
+    .prompt([{
         type: "input",
         name: "managerName",
         message: "What is the team managers name? (Required)",
@@ -57,19 +58,23 @@ const promptUser = () => {
         },
       },
     ])
+    // destructuring data and then createing a new employee and pusing to teamList array
     .then((managerData) => {
-      console.log("managerData:", managerData);
-
-      const { managerName, id, email, officeNumber, nextEmployee } =
-        managerData;
+      const {
+        managerName,
+        id,
+        email,
+        officeNumber,
+      } =
+      managerData;
       const manager = new Manager(managerName, id, email, officeNumber);
       teamList.push(manager);
     });
 };
+// prompting user to enter information on additional employees
 const employeeQuestions = () => {
   return inquirer
-    .prompt([
-      {
+    .prompt([{
         type: "list",
         name: "role",
         message: "What type of employee would you like to add to the team? ",
@@ -141,6 +146,7 @@ const employeeQuestions = () => {
         default: true,
       },
     ])
+    // destucturing data and creating new employee by verifying role
     .then((empData) => {
       const {
         school,
@@ -153,6 +159,7 @@ const employeeQuestions = () => {
       } = empData;
       if (role === "Engineer") {
         const employee = new Engineer(name, id, email, employeeGithub);
+        console.log("lsk;djf", employee.getName)
         teamList.push(employee);
         teamMemberCounter++;
       } else if (role === "Intern") {
@@ -170,7 +177,7 @@ const employeeQuestions = () => {
       }
     });
 };
-
+// initiating application and then passing data to generate an HTML page
 promptUser()
   .then(employeeQuestions)
   .then((employeeData) => {
@@ -178,5 +185,4 @@ promptUser()
   })
   .then(htmlData => {
     return writeFile(htmlData);
-  }
-  )
+  })
