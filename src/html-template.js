@@ -24,21 +24,23 @@ function generateManagerCard(data) {
                     </div>   
                     <div class="card-body">
                           <div class="idElement">
-                            <h2>${name}</h2>
-                            <h2>ID:${id}</h2>
+                            <h3>${name}</h3>
+                            <h3>ID:${id}</h3>
                           </div>
                           <div class="managerEmail">
-                              <h2>email:${email}</h2>
+                            <h3>
+                                email: <a href="mailto:${email}">${email}</a>
+                            </h3>
                           </div>
                           <div class="managerOfficeNumber">
-                              <h2>Phone: ${officeNumber}</h2>
+                              <h3>Phone: ${officeNumber}</h3>
                           </div>
                       </div>
                   
               </div>
     `;
 }
-function generateEngineerCard(employee) {
+function generateEngineerCard(employee) {00
     const {
         name,
         id,
@@ -58,14 +60,18 @@ function generateEngineerCard(employee) {
         </div>    
         <div class="card-body">
             <div class="idElement">
-                <h2>:${name}</h2>
-                <h2>ID:${id}</h2>
+                <h3>:${name}</h3>
+                <h3>ID:${id}</h3>
             </div>
             <div class="engineer-email">
-                <h2>email:${email}</h2>
+                <h3>
+                    email: <a href="mailto:${email}">${email}</a>
+                </h3>
             </div>
             <div class="engineer-github">
-                <h2>Github:${github}</h2>
+                <h3>
+                Github: <a href="https://github.com/${github}">${github}</a>
+                </h3>
             </div>
         </div>
 </div>
@@ -86,14 +92,16 @@ function generateInternCard (internData) {
                     </div>    
                     <div class="card-body">
                         <div class="idElement">
-                            <h2>${name}</h2>
-                            <h2>ID:${id}</h2>
+                            <h3>${name}</h3>
+                            <h3>ID:${id}</h3>
                         </div>
                         <div class="internEmail">
-                            <h2>email:${email}</h2>
+                            <h3>
+                            email: <a href="mailto:${email}">${email}</a>
+                            </h3>
                         </div>
                         <div class="intern-school">
-                            <h2>School:${school}</h2>
+                            <h3>School:${school}</h3>
                         </div>
                     </div>
             </div>
@@ -146,7 +154,7 @@ function generateHTML(teamListData) {
         console.log("employee:", employee);
         const role = employee.getRole();
         console.log("role:", role);
-        if (role === "manager") {
+        if (role === "Manager") {
             const managerCard = generateManagerCard(employee);
             pageArray.push(managerCard);
         } else if (role === "Engineer") {

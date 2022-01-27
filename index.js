@@ -78,12 +78,13 @@ const employeeQuestions = () => {
         type: "list",
         name: "role",
         message: "What type of employee would you like to add to the team? ",
-        choices: ["Engineer", "Intern"],
+        choices: ["Engineer", "Intern","none, finish team"],
       },
       {
         type: "input",
         name: "name",
         message: "What is the employees name?",
+        
         validate: (idInput) => {
           if (idInput) {
             return true;
@@ -159,7 +160,6 @@ const employeeQuestions = () => {
       } = empData;
       if (role === "Engineer") {
         const employee = new Engineer(name, id, email, employeeGithub);
-        console.log("lsk;djf", employee.getName)
         teamList.push(employee);
         teamMemberCounter++;
       } else if (role === "Intern") {
@@ -181,6 +181,8 @@ const employeeQuestions = () => {
 promptUser()
   .then(employeeQuestions)
   .then((employeeData) => {
+    console.log('employeeData:', employeeData)
+    
     return generateHTML(employeeData);
   })
   .then(htmlData => {
